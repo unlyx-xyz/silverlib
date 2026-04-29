@@ -59,6 +59,8 @@ int SLCloseSocket(int fd);
 ========================
 */
 
+#ifdef SILVER_LIB_IMPLEMENTATION
+
 #ifndef SILVER_LIB_LOGL
 #define SILVER_LIB_LOGL LOGL_DISABLED
 #endif
@@ -88,8 +90,6 @@ static inline void _sl_log(LOG_LEVEL logl, const char* file,
 #define SL_LogWarn(...)  _sl_log(LOGL_WARN,  __FILE__, __LINE__, __func__, ##__VA_ARGS__);
 #define SL_LogError(...) _sl_log(LOGL_ERROR, __FILE__, __LINE__, __func__, ##__VA_ARGS__);
 #define SL_LogFatal(...) _sl_log(LOGL_FATAL, __FILE__, __LINE__, __func__, ##__VA_ARGS__);
-
-#ifdef SILVER_LIB_IMPLEMENTATION
 
 #define opthandler(enabled, fd, lvl, opt, val, size)\
         do {\
