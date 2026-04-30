@@ -112,7 +112,7 @@ static inline void _sl_log(LOG_LEVEL logl, const char* file,
     time_t t = time(NULL);
     struct tm *tm_info = localtime(&t);
     fprintf(stderr, "| %d:%d:%d.%03ld | ", tm_info->tm_hour, tm_info->tm_min, tm_info->tm_sec, ts.tv_nsec / 1000000);
-    TL_8BitfPrintf(stderr, _log_color[logl], "[%s] %s:%d:%s: ", logl_presentations[logl], file, line, fnc);
+    TL_8BitfPrintf(stderr, _log_color[logl], "[%s] %s:%d:%s:", logl_presentations[logl], file, line, fnc);
     va_list args;
     va_start(args, fmt);
     vfprintf(stderr, fmt, args);
