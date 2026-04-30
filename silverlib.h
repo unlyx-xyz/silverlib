@@ -120,31 +120,31 @@ static inline void _sl_log(LOG_LEVEL logl, const char* file,
     fprintf(stderr, "\n");
 }
 
-#define SL_LogTrace(...) _sl_log(LOGL_TRACE, __FILE__, __LINE__, __func__, ##__VA_ARGS__);
-#define SL_LogDebug(...) _sl_log(LOGL_DEBUG, __FILE__, __LINE__, __func__, ##__VA_ARGS__);
-#define SL_LogInfo(...)  _sl_log(LOGL_INFO,  __FILE__, __LINE__, __func__, ##__VA_ARGS__);
-#define SL_LogWarn(...)  _sl_log(LOGL_WARN,  __FILE__, __LINE__, __func__, ##__VA_ARGS__);
-#define SL_LogError(...) _sl_log(LOGL_ERROR, __FILE__, __LINE__, __func__, ##__VA_ARGS__);
-#define SL_LogFatal(...) _sl_log(LOGL_FATAL, __FILE__, __LINE__, __func__, ##__VA_ARGS__);
+#define _sl_log_trace(...) _sl_log(LOGL_TRACE, __FILE__, __LINE__, __func__, ##__VA_ARGS__);
+#define _sl_log_debug(...) _sl_log(LOGL_DEBUG, __FILE__, __LINE__, __func__, ##__VA_ARGS__);
+#define _sl_log_info(...)  _sl_log(LOGL_INFO,  __FILE__, __LINE__, __func__, ##__VA_ARGS__);
+#define _sl_log_warn(...)  _sl_log(LOGL_WARN,  __FILE__, __LINE__, __func__, ##__VA_ARGS__);
+#define _sl_log_error(...) _sl_log(LOGL_ERROR, __FILE__, __LINE__, __func__, ##__VA_ARGS__);
+#define _sl_log_fatal(...) _sl_log(LOGL_FATAL, __FILE__, __LINE__, __func__, ##__VA_ARGS__);
 
 #define opthandler(enabled, fd, lvl, opt, val, size)\
         do {\
             if (enabled) {\
                 if (setsockopt(fd, lvl, opt, val, size) < 0) {\
-                    SL_LogError("%s", strerror(errno));\
+                    _sl_log_error("%s", strerror(errno));\
                     return -1;\
                 }\
-                SL_LogInfo(#opt " applied successfully");\
+                _sl_log_info(#opt " applied successfully");\
             }\
         } while (0)\
 
 int SLCreateUDPIPv4Socket(sock_opt_t *opts) {
     int sock;
     if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-        SL_LogError("Failed creating socket | %s", strerror(errno));
+        _sl_log_error("Failed creating socket | %s", strerror(errno));
         return -1;
     }
-    SL_LogInfo("Socket created successfully");
+    _sl_log_info("Socket created successfully");
     opthandler(opts->reuseaddr, sock, SOL_SOCKET, SO_REUSEADDR, &opts->reuseaddr, sizeof(opts->reuseaddr));
     opthandler(opts->reuseport, sock, SOL_SOCKET, SO_REUSEPORT, &opts->reuseport, sizeof(opts->reuseport));
     return sock;
@@ -152,10 +152,10 @@ int SLCreateUDPIPv4Socket(sock_opt_t *opts) {
 int SLCreateTCPIPv4Socket(sock_opt_t *opts) {
     int sock;
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        SL_LogError("Failed creating socket | %s", strerror(errno));
+        _sl_log_error("Failed creating socket | %s", strerror(errno));
         return -1;
     }
-    SL_LogInfo("Socket created successfully");
+    _sl_log_info("Socket created successfully");
     opthandler(opts->reuseaddr,         sock, SOL_SOCKET,   SO_REUSEADDR,   &opts->reuseaddr,           sizeof(opts->reuseaddr));
     opthandler(opts->reuseport,         sock, SOL_SOCKET,   SO_REUSEPORT,   &opts->reuseport,           sizeof(opts->reuseport));
     opthandler(opts->keepalive.enable,  sock, SOL_SOCKET,   SO_KEEPALIVE,   &opts->keepalive.enable,    sizeof(opts->keepalive.enable));
@@ -166,10 +166,10 @@ int SLCreateTCPIPv4Socket(sock_opt_t *opts) {
 }
 int SLCloseSocket(int fd) {
     if (close(fd) < 0) {
-        SL_LogError("Failed closing file descriptor: %d | %s", fd, strerror(errno));
+        _sl_log_error("Failed closing file descriptor: %d | %s", fd, strerror(errno));
         return -1;
     }
-    SL_LogInfo("File descriptor: %d closed successfully", fd);
+    _sl_log_info("File descriptor: %d closed successfully", fd);
     return 0;
 };
 #endif
