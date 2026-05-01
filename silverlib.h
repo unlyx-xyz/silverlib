@@ -129,6 +129,7 @@ static inline void _sl_log(LOG_LEVEL logl, const char* file,
 
 #define opthandler(enabled, fd, lvl, opt, val, size)\
         do {\
+            _sl_log_trace("Entering opthandler macro with values: %d, %d, %d, %d, %d, %d", enabled, fd, lvl, opt, val, size);
             if (enabled) {\
                 if (setsockopt(fd, lvl, opt, val, size) < 0) {\
                     _sl_log_error("%s", strerror(errno));\
@@ -139,6 +140,7 @@ static inline void _sl_log(LOG_LEVEL logl, const char* file,
         } while (0)\
 
 int SLCreateUDPIPv4Socket(sock_opt_t *opts) {
+    _sl_log_trace("Entering function with values: opts:(%d, %d, keepalive: %d, %d, %d, %d)", opts->reuseaddr, opts->reuseport, opts->keepalive.enable, opts->keepalive.idle, opts->keepalive.interval, opts->keepalive.probes);
     int sock;
     if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         _sl_log_error("Failed creating socket | %s", strerror(errno));
@@ -147,9 +149,11 @@ int SLCreateUDPIPv4Socket(sock_opt_t *opts) {
     _sl_log_info("Socket created successfully");
     opthandler(opts->reuseaddr, sock, SOL_SOCKET, SO_REUSEADDR, &opts->reuseaddr, sizeof(opts->reuseaddr));
     opthandler(opts->reuseport, sock, SOL_SOCKET, SO_REUSEPORT, &opts->reuseport, sizeof(opts->reuseport));
+    _sl_log_trace("Leaving function with values: opts:(%d, %d, keepalive: %d, %d, %d, %d)", opts->reuseaddr, opts->reuseport, opts->keepalive.enable, opts->keepalive.idle, opts->keepalive.interval, opts->keepalive.probes);
     return sock;
 };
 int SLCreateTCPIPv4Socket(sock_opt_t *opts) {
+    _sl_log_trace("Entering function with values: opts:(%d, %d, keepalive: %d, %d, %d, %d)", opts->reuseaddr, opts->reuseport, opts->keepalive.enable, opts->keepalive.idle, opts->keepalive.interval, opts->keepalive.probes);
     int sock;
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         _sl_log_error("Failed creating socket | %s", strerror(errno));
@@ -161,15 +165,18 @@ int SLCreateTCPIPv4Socket(sock_opt_t *opts) {
     opthandler(opts->keepalive.enable,  sock, SOL_SOCKET,   SO_KEEPALIVE,   &opts->keepalive.enable,    sizeof(opts->keepalive.enable));
     opthandler(opts->keepalive.enable,  sock, IPPROTO_TCP,  TCP_KEEPIDLE,   &opts->keepalive.idle,      sizeof(opts->keepalive.interval));
     opthandler(opts->keepalive.enable,  sock, IPPROTO_TCP,  TCP_KEEPINTVL,  &opts->keepalive.interval,  sizeof(opts->keepalive.interval)); 
-    opthandler(opts->keepalive.enable,  sock, IPPROTO_TCP,  TCP_KEEPCNT,    &opts->keepalive.probes,    sizeof(opts->keepalive.probes)); 
+    opthandler(opts->keepalive.enable,  sock, IPPROTO_TCP,  TCP_KEEPCNT,    &opts->keepalive.probes,    sizeof(opts->keepalive.probes));
+    _sl_log_trace("Leaving function with values: opts:(%d, %d, keepalive: %d, %d, %d, %d)", opts->reuseaddr, opts->reuseport, opts->keepalive.enable, opts->keepalive.idle, opts->keepalive.interval, opts->keepalive.probes);
     return sock;
 }
 int SLCloseSocket(int fd) {
+    _sl_log_trace("Entering function with values: fd:%d", fd);
     if (close(fd) < 0) {
         _sl_log_error("Failed closing file descriptor: %d | %s", fd, strerror(errno));
         return -1;
     }
     _sl_log_info("File descriptor: %d closed successfully", fd);
+    _sl_log_trace("Leaving function with values: fd:%d", fd);
     return 0;
 };
 #endif
