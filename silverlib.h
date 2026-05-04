@@ -64,6 +64,23 @@ int SLCreateUDPIPv4Socket(SocketContext *ctx);
 int SLCreateTCPIPv4Socket(SocketContext *ctx);
 int SLCloseSocket(int fd);
 
+// NETWORKING -> CONNECTION --------------
+
+typedef struct {
+    int origsock;
+    sockaddr_in destaddr;
+} ConnectionContext;
+
+int SLConnectIPv4Socket(ConnectionContext *ctx);
+
+typedef struct {
+    int sock;
+    uint16_t port;
+    uint32_t incoming;
+} ListeningContext;
+
+int SLListenIPv4Socket(ListeningContext *ctx);
+
 /*
 ========================
 ==###IMPLEMENTATION###==
@@ -183,6 +200,43 @@ int SLCloseSocket(int fd) {
     _sl_log_trace("Leaving function with values: fd:%d", fd);
     return 0;
 };
+int SLConnectIPv4Socket(ConnectionContext *ctx) {
+    _sl_log_trace("Entering function with values: ctx:(%d, destaddr: %d, %d)", ctx->origsock, ctx->destaddr.sin_port, ctx->destaddr.sin_addr.s_addr);
+    char presentation_dest_ip[INET_ADDRSTRLEN] = {0};
+    uint16_t presentation_dest_port = ntohs(cts->destaddr.sin_port);
+    inet_ntop(AF_INET, ctx->destaddr.sin_adrr.s_addr, presentation_dest_ip, sizeof(presentation_dest_ip));
+    socklen_t destaddrlen = sizeof(ctx->destaddr);
+    _sl_log_info("Connecting socket with file descriptor: %d to: %s:%d", ctx->origsock, presentation_dest_ip, presentation_dest_port);
+    if(connect(ctx->origsock, (struct sockaddr *)&ctx->destaddr, destaddrlen) < 0) {
+        _sl_log_error("Failed connecting socket with file descriptor: %d to: %s:%d | %s", ctx->origsock, presentation_dest_ip, presentation_dest_port, strerror(errno));
+        return -1;
+    }
+    _sl_log_info("Socket with file descriptor: %d connected to: %s:%d", ctx->origsock, presentation_dest_ip, presentation_dest_port);
+    _sl_log_trace("Leaving function with values: ctx:(%d, destaddr: %d, )", ctx->origsock, ctx->destaddr.sin_port, ctx->destaddr.sin_addr.s_addr);
+    return 0;
+};
+int SLListenIPv4Socket(ListeningContext *ctx) {
+    _sl_log_trace("Entering function with values: ctx:(%d, %d, %d)", ctx->sock, ctx->port, ctx->incoming);
+    _sl_log_info("Binding socket with file descriptor: %d to poert: %d", ctx->sock, ctx->port);
+    struct sockaddr_in srvaddr;
+    srvaddr.sin_family = AF_INET;
+    srvaddr.sin_addr.s_addr = INADDR_ANY;
+    srvaddr.sin_port = htons(ctx->port);
+    socklen_t srvaddrlen = sizeof(srvaddr);
+    if(bind(ctx->sock, (struct sockaddr *)&srvaddr, srvaddrlen) < 0) {
+        _sl_log_error("Failed binding socket with file descriptor: %d | %s", ctx->sock, strerror(errno));
+        return -1;
+    }
+    _sl_log_info("Socket with file descriptor: %d successfully binded to port: %d", ctx->sock, ctx->port);
+    _sl_log_info("Setting socket with file descriptor: %d to listening mode", ctx->sock);
+    if (listen(ctx->sock, ctx->incoming) < 0) {
+        _sl_log_error("Failed setting listening mode to socket: %d", ctx->sock);
+        return -1;
+    }
+    _sl_log_info("Socket with file descriptor: %d successfully set to listening mode", ctx->sock);
+    _sl_log_trace("Leaving function with values: ctx:(%d, destaddr: %d, )", ctx->origsock, ctx->destaddr.sin_port, ctx->destaddr.sin_addr.s_addr);
+    return 0;
+} 
 #endif
 
 #endif
