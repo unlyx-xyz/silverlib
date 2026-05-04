@@ -73,27 +73,26 @@ TL_Sequence _log_color[] = {
     (TL_Sequence){0},
     (TL_Sequence){0},
     (TL_Sequence){0},
-    (TL_Sequence){0}
 };
 
 void SLInitLib(void) {
 
-    TL_Sequence graphics_settings = TL_InitSequence();
-    graphics_settings.graphics.bold = true;
-    graphics_settings.graphics.underline = true;
+    TL_Sequence graphics_settings = {0};
+    graphics_settings.da.bold = true;
+    graphics_settings.da.underline = true;
 
     uint8_t log_color_elements = sizeof(_log_color) / sizeof(TL_Sequence);
     for (uint8_t i = 0; i < log_color_elements; i++) {
         TL_CopyGraphics(graphics_settings, &_log_color[i]);
-        _log_color[i].eight_bit.background = -1;
+        _log_color[i].c8bit.background = -1;
     }
 
-    _log_color[LOGL_TRACE].eight_bit.foreground = 255;
-    _log_color[LOGL_DEBUG].eight_bit.foreground = 226;
-    _log_color[LOGL_INFO].eight_bit.foreground = 45;
-    _log_color[LOGL_WARN].eight_bit.foreground = 208;
-    _log_color[LOGL_ERROR].eight_bit.foreground = 196;
-    _log_color[LOGL_FATAL].eight_bit.foreground = 232;
+    _log_color[LOGL_TRACE].c8bit.foreground = 255;
+    _log_color[LOGL_DEBUG].c8bit.foreground = 226;
+    _log_color[LOGL_INFO].c8bit.foreground = 45;
+    _log_color[LOGL_WARN].c8bit.foreground = 208;
+    _log_color[LOGL_ERROR].c8bit.foreground = 196;
+    _log_color[LOGL_FATAL].c8bit.foreground = 232;
 
 }
 
@@ -112,7 +111,7 @@ static inline void _sl_log(LOG_LEVEL logl, const char* file,
     time_t t = time(NULL);
     struct tm *tm_info = localtime(&t);
     fprintf(stderr, "| %d:%d:%d.%03ld | ", tm_info->tm_hour, tm_info->tm_min, tm_info->tm_sec, ts.tv_nsec / 1000000);
-    TL_8BitfPrintf(stderr, _log_color[logl], "[%s] %s:%d:%s:", logl_presentations[logl], file, line, fnc);
+    TL_fprintfc8bit(stderr, _log_color[logl], "[%s] %s:%d:%s:", logl_presentations[logl], file, line, fnc);
     va_list args;
     va_start(args, fmt);
     vfprintf(stderr, fmt, args);
