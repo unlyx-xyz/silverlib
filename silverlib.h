@@ -29,6 +29,8 @@ Version: 1.1.0
 ======================
 */
 
+// LOGGING ------------------------------
+
 typedef enum {
     LOGL_TRACE = 0,
     LOGL_DEBUG = 1, 
@@ -40,6 +42,8 @@ typedef enum {
 } LOG_LEVEL;
 
 extern TL_Sequence _log_color[];
+
+// NETWORKING -> SOCKETS ----------------
 
 typedef struct {
     int enable;
