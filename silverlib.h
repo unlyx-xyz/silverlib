@@ -29,6 +29,8 @@ Version: 1.1.1
 ======================
 */
 
+void SLInitLib(void);
+
 // LOGGING ------------------------------
 
 typedef enum {
@@ -58,7 +60,6 @@ typedef struct {
     KeepaliveContext keepalive; 
 } SocketContext;
 
-void SLInitLib(void);
 int SLCreateUDPIPv4Socket(SocketContext *ctx);
 int SLCreateTCPIPv4Socket(SocketContext *ctx);
 int SLCloseSocket(int fd);
