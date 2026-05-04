@@ -50,17 +50,17 @@ typedef struct {
     int idle;
     int interval;
     int probes;
-} keepalive_settings_t;
+} KeepaliveContext;
 
 typedef struct {
     int reuseaddr;
     int reuseport;
-    keepalive_settings_t keepalive; 
-} sock_opt_t;
+    KeepaliveContext keepalive; 
+} SocketContext;
 
 void SLInitLib(void);
-int SLCreateUDPIPv4Socket(sock_opt_t *opts);
-int SLCreateTCPIPv4Socket(sock_opt_t *opts);
+int SLCreateUDPIPv4Socket(SocketContext *ctx);
+int SLCreateTCPIPv4Socket(SocketContext *ctx);
 int SLCloseSocket(int fd);
 
 /*
@@ -142,34 +142,34 @@ static inline void _sl_log(LOG_LEVEL logl, const char* file,
             }\
         } while (0)\
 
-int SLCreateUDPIPv4Socket(sock_opt_t *opts) {
-    _sl_log_trace("Entering function with values: opts:(%d, %d, keepalive: %d, %d, %d, %d)", opts->reuseaddr, opts->reuseport, opts->keepalive.enable, opts->keepalive.idle, opts->keepalive.interval, opts->keepalive.probes);
+int SLCreateUDPIPv4Socket(SocketContext *ctx) {
+    _sl_log_trace("Entering function with values: ctx:(%d, %d, keepalive: %d, %d, %d, %d)", ctx->reuseaddr, ctx->reuseport, ctx->keepalive.enable, ctx->keepalive.idle, ctx->keepalive.interval, ctx->keepalive.probes);
     int sock;
     if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         _sl_log_error("Failed creating socket | %s", strerror(errno));
         return -1;
     }
     _sl_log_info("Socket created successfully");
-    opthandler(opts->reuseaddr, sock, SOL_SOCKET, SO_REUSEADDR, &opts->reuseaddr, sizeof(opts->reuseaddr));
-    opthandler(opts->reuseport, sock, SOL_SOCKET, SO_REUSEPORT, &opts->reuseport, sizeof(opts->reuseport));
-    _sl_log_trace("Leaving function with values: opts:(%d, %d, keepalive: %d, %d, %d, %d)", opts->reuseaddr, opts->reuseport, opts->keepalive.enable, opts->keepalive.idle, opts->keepalive.interval, opts->keepalive.probes);
+    opthandler(ctx->reuseaddr, sock, SOL_SOCKET, SO_REUSEADDR, &ctx->reuseaddr, sizeof(ctx->reuseaddr));
+    opthandler(ctx->reuseport, sock, SOL_SOCKET, SO_REUSEPORT, &ctx->reuseport, sizeof(ctx->reuseport));
+    _sl_log_trace("Leaving function with values: ctx:(%d, %d, keepalive: %d, %d, %d, %d)", ctx->reuseaddr, ctx->reuseport, ctx->keepalive.enable, ctx->keepalive.idle, ctx->keepalive.interval, ctx->keepalive.probes);
     return sock;
 };
-int SLCreateTCPIPv4Socket(sock_opt_t *opts) {
-    _sl_log_trace("Entering function with values: opts:(%d, %d, keepalive: %d, %d, %d, %d)", opts->reuseaddr, opts->reuseport, opts->keepalive.enable, opts->keepalive.idle, opts->keepalive.interval, opts->keepalive.probes);
+int SLCreateTCPIPv4Socket(SocketContext *ctx) {
+    _sl_log_trace("Entering function with values: ctx:(%d, %d, keepalive: %d, %d, %d, %d)", ctx->reuseaddr, ctx->reuseport, ctx->keepalive.enable, ctx->keepalive.idle, ctx->keepalive.interval, ctx->keepalive.probes);
     int sock;
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         _sl_log_error("Failed creating socket | %s", strerror(errno));
         return -1;
     }
     _sl_log_info("Socket created successfully");
-    opthandler(opts->reuseaddr,         sock, SOL_SOCKET,   SO_REUSEADDR,   &opts->reuseaddr,           sizeof(opts->reuseaddr));
-    opthandler(opts->reuseport,         sock, SOL_SOCKET,   SO_REUSEPORT,   &opts->reuseport,           sizeof(opts->reuseport));
-    opthandler(opts->keepalive.enable,  sock, SOL_SOCKET,   SO_KEEPALIVE,   &opts->keepalive.enable,    sizeof(opts->keepalive.enable));
-    opthandler(opts->keepalive.enable,  sock, IPPROTO_TCP,  TCP_KEEPIDLE,   &opts->keepalive.idle,      sizeof(opts->keepalive.interval));
-    opthandler(opts->keepalive.enable,  sock, IPPROTO_TCP,  TCP_KEEPINTVL,  &opts->keepalive.interval,  sizeof(opts->keepalive.interval)); 
-    opthandler(opts->keepalive.enable,  sock, IPPROTO_TCP,  TCP_KEEPCNT,    &opts->keepalive.probes,    sizeof(opts->keepalive.probes));
-    _sl_log_trace("Leaving function with values: opts:(%d, %d, keepalive: %d, %d, %d, %d)", opts->reuseaddr, opts->reuseport, opts->keepalive.enable, opts->keepalive.idle, opts->keepalive.interval, opts->keepalive.probes);
+    opthandler(ctx->reuseaddr,         sock, SOL_SOCKET,   SO_REUSEADDR,   &ctx->reuseaddr,           sizeof(ctx->reuseaddr));
+    opthandler(ctx->reuseport,         sock, SOL_SOCKET,   SO_REUSEPORT,   &ctx->reuseport,           sizeof(ctx->reuseport));
+    opthandler(ctx->keepalive.enable,  sock, SOL_SOCKET,   SO_KEEPALIVE,   &ctx->keepalive.enable,    sizeof(ctx->keepalive.enable));
+    opthandler(ctx->keepalive.enable,  sock, IPPROTO_TCP,  TCP_KEEPIDLE,   &ctx->keepalive.idle,      sizeof(ctx->keepalive.interval));
+    opthandler(ctx->keepalive.enable,  sock, IPPROTO_TCP,  TCP_KEEPINTVL,  &ctx->keepalive.interval,  sizeof(ctx->keepalive.interval)); 
+    opthandler(ctx->keepalive.enable,  sock, IPPROTO_TCP,  TCP_KEEPCNT,    &ctx->keepalive.probes,    sizeof(ctx->keepalive.probes));
+    _sl_log_trace("Leaving function with values: ctx:(%d, %d, keepalive: %d, %d, %d, %d)", ctx->reuseaddr, ctx->reuseport, ctx->keepalive.enable, ctx->keepalive.idle, ctx->keepalive.interval, ctx->keepalive.probes);
     return sock;
 }
 int SLCloseSocket(int fd) {
