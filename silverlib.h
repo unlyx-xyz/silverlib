@@ -105,7 +105,7 @@ void SLInitLib(void) {
 
     uint8_t log_color_elements = sizeof(_log_color) / sizeof(TL_Sequence);
     for (uint8_t i = 0; i < log_color_elements; i++) {
-        TL_CopyGraphics(graphics_settings, &_log_color[i]);
+        TL_CopySequenceDa(graphics_settings, &_log_color[i]);
         _log_color[i].c8bit.background = -1;
     }
 
@@ -203,8 +203,8 @@ int SLCloseSocket(int fd) {
 int SLConnectIPv4Socket(ConnectionContext *ctx) {
     _sl_log_trace("Entering function with values: ctx:(%d, destaddr: %d, %d)", ctx->origsock, ctx->destaddr.sin_port, ctx->destaddr.sin_addr.s_addr);
     char presentation_dest_ip[INET_ADDRSTRLEN] = {0};
-    uint16_t presentation_dest_port = ntohs(cts->destaddr.sin_port);
-    inet_ntop(AF_INET, ctx->destaddr.sin_adrr.s_addr, presentation_dest_ip, sizeof(presentation_dest_ip));
+    uint16_t presentation_dest_port = ntohs(ctx->destaddr.sin_port);
+    inet_ntop(AF_INET, &ctx->destaddr.sin_addr.s_addr, presentation_dest_ip, sizeof(presentation_dest_ip));
     socklen_t destaddrlen = sizeof(ctx->destaddr);
     _sl_log_info("Connecting socket with file descriptor: %d to: %s:%d", ctx->origsock, presentation_dest_ip, presentation_dest_port);
     if(connect(ctx->origsock, (struct sockaddr *)&ctx->destaddr, destaddrlen) < 0) {
@@ -234,7 +234,7 @@ int SLListenIPv4Socket(ListeningContext *ctx) {
         return -1;
     }
     _sl_log_info("Socket with file descriptor: %d successfully set to listening mode", ctx->sock);
-    _sl_log_trace("Leaving function with values: ctx:(%d, destaddr: %d, )", ctx->origsock, ctx->destaddr.sin_port, ctx->destaddr.sin_addr.s_addr);
+    _sl_log_trace("Leaving function with values: ctx:(%d, %d, %d)", ctx->sock, ctx->port, ctx->incoming);
     return 0;
 } 
 #endif
