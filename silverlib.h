@@ -68,7 +68,7 @@ int SLCloseSocket(int fd);
 
 typedef struct {
     int origsock;
-    sockaddr_in destaddr;
+    struct sockaddr_in destaddr;
 } ConnectionContext;
 
 int SLConnectIPv4Socket(ConnectionContext *ctx);
