@@ -150,7 +150,7 @@ static inline void _sl_log(LOG_LEVEL logl, const char* file,
 
 #define opthandler(enabled, fd, lvl, opt, val, size)\
         do {\
-            _sl_log_trace("Entering opthandler macro with values: %d, %d, %d, %d, %d, %d", enabled, fd, lvl, opt, val, size);
+            _sl_log_trace("Entering opthandler macro with values: %d, %d, %d, %d, %d, %d", enabled, fd, lvl, opt, val, size);\
             if (enabled) {\
                 if (setsockopt(fd, lvl, opt, val, size) < 0) {\
                     _sl_log_error("%s", strerror(errno));\
