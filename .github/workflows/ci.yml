@@ -1,0 +1,19 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v4
+      - name: Compile tests
+        run: gcc test/tcli.c -o tcli
+        run: gcc test/tsrv.c -o tsrv
+      - name: Run tests
+        run: ./tsrv
+        run: ./tcli
