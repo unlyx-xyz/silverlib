@@ -11,9 +11,11 @@ jobs:
     steps:
       - name: Code checkout
         uses: actions/checkout@v4
-      - name: Compile tests
+      - name: Compile client test
         run: gcc test/tcli.c -o tcli
+      - name: Compile server test
         run: gcc test/tsrv.c -o tsrv
-      - name: Run tests
+      - name: Run server
         run: ./tsrv
+      - name: Run client
         run: ./tcli
