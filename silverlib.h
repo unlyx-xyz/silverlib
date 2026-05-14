@@ -1,7 +1,7 @@
 /* 
 Silver Library project - Made by: unlyx.xyz
 04-25-2026
-Version: 1.2.3
+Version: 1.3.0
 */
 
 #ifndef SILVER_LIB_H
