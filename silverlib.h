@@ -255,8 +255,14 @@ int SLListenIPv4Socket(ListeningContext *ctx) {
         return -1;
     }
     _sl_log_info("Socket with file descriptor: %d successfully set to listening mode", ctx->sock);
+    int cnnclisock = accept(ctx->sock, NULL, 0);
+    if (cnnclisock < 0) {
+        _sl_log_error("Failed accepting connection with client | %s", strerror(errno));
+        return -1;
+    }
+    _sl_log_info("Socket with file descriptor: %d accepted connection with client. Client file descriptor: %d", ctx->sock, cnnclisock);
     _sl_log_trace("Leaving function with values: ctx:(%d, %d, %d)", ctx->sock, ctx->port, ctx->incoming);
-    return 0;
+    return cnnclisock;
 }
 int SLSendIPv4Socket(int sock, void* data, size_t size, int flags) {
     if (!_sl_check_library_initialized()) return -1;
