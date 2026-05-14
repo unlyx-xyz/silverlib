@@ -16,6 +16,6 @@ jobs:
       - name: Compile server test
         run: gcc test/tsrv.c -o tsrv
       - name: Run server
-        run: ./tsrv
+        run: ./tsrv &
       - name: Run client
         run: ./tcli
