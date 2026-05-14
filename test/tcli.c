@@ -33,7 +33,7 @@ int main() {
     assert(SLConnectIPv4Socket(&clicnnctx) >= 0);
 
     char msg_sent[100] = "Hello from silverlib!";
-    assert(SLSendIPv4Socket(clisock, &msg_sent, sizeof(msg_sent), 0) == strlen(msg_sent) + 1);
+    assert(SLSendIPv4Socket(clisock, &msg_sent, sizeof(msg_sent), 0) == sizeof(msg_sent));
 
     SLCloseSocket(clisock);
 
