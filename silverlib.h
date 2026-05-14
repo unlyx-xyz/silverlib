@@ -81,6 +81,11 @@ typedef struct {
 
 int SLListenIPv4Socket(ListeningContext *ctx);
 
+// NETWORKING -> TRAFFIC -----------------
+
+int SLSendIPv4Socket(int sock, void* data, size_t size, int flags);
+int SLRecvIPv4Socket(int sock, void* buff, size_t size, int flags);
+
 /*
 ========================
 ==###IMPLEMENTATION###==
@@ -236,7 +241,31 @@ int SLListenIPv4Socket(ListeningContext *ctx) {
     _sl_log_info("Socket with file descriptor: %d successfully set to listening mode", ctx->sock);
     _sl_log_trace("Leaving function with values: ctx:(%d, %d, %d)", ctx->sock, ctx->port, ctx->incoming);
     return 0;
-} 
+}
+int SLSendIPv4Socket(int sock, void* data, size_t size, int flags) {
+    _sl_log_trace("Entering function with values: %d, %p, %l", sock, data, size);
+    _sl_log_info("Sending bytes from socket: %d", sock);
+    ssize_t bytes_sent = send(sock, data, size, flags);
+    if (bytes_sent <= 0) {
+        _sl_log_error("Error sending data from socket: %d | %s", sock, strerror(errno));
+        return -1;
+    }
+    _sl_log_info("Bytes sent successfully from socket: %d", sock);
+    _sl_log_trace("Leaving function with values: %d, %p, %l", sock, data, size);
+    return bytes_sent;
+}
+int SLRecvIPv4Socket(int sock, void* buff, size_t size, int flags) {
+    _sl_log_trace("Entering function with values: %d, %p, %l", sock, buff, size);
+    _sl_log_info("Waiting to recv info from socket: %d...", sock);
+    ssize_t bytes_recv = recv(sock, buff, size, flags);
+    if (bytes_recv <= 0) {
+        _sl_log_error("Error receiving data from socket: %d", sock);
+        return -1;
+    }
+    _sl_log_info("Data received successfully from socket: %d", sock);
+    _sl_log_trace("Leaving function with values: %d, %p, %l", sock, buff, size);
+    return bytes_recv;
+}
 #endif
 
 #endif
