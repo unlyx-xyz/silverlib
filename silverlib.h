@@ -172,7 +172,7 @@ int SLCreateUDPIPv4Socket(SocketContext *ctx) {
     opthandler(ctx->reuseport, sock, SOL_SOCKET, SO_REUSEPORT, &ctx->reuseport, sizeof(ctx->reuseport));
     _sl_log_trace("Leaving function with values: ctx:(%d, %d, keepalive: %d, %d, %d, %d)", ctx->reuseaddr, ctx->reuseport, ctx->keepalive.enable, ctx->keepalive.idle, ctx->keepalive.interval, ctx->keepalive.probes);
     return sock;
-};
+}
 int SLCreateTCPIPv4Socket(SocketContext *ctx) {
     _sl_log_trace("Entering function with values: ctx:(%d, %d, keepalive: %d, %d, %d, %d)", ctx->reuseaddr, ctx->reuseport, ctx->keepalive.enable, ctx->keepalive.idle, ctx->keepalive.interval, ctx->keepalive.probes);
     int sock;
@@ -199,7 +199,7 @@ int SLCloseSocket(int fd) {
     _sl_log_info("File descriptor: %d closed successfully", fd);
     _sl_log_trace("Leaving function with values: fd:%d", fd);
     return 0;
-};
+}
 int SLConnectIPv4Socket(ConnectionContext *ctx) {
     _sl_log_trace("Entering function with values: ctx:(%d, destaddr: %d, %d)", ctx->origsock, ctx->destaddr.sin_port, ctx->destaddr.sin_addr.s_addr);
     char presentation_dest_ip[INET_ADDRSTRLEN] = {0};
@@ -214,7 +214,7 @@ int SLConnectIPv4Socket(ConnectionContext *ctx) {
     _sl_log_info("Socket with file descriptor: %d connected to: %s:%d", ctx->origsock, presentation_dest_ip, presentation_dest_port);
     _sl_log_trace("Leaving function with values: ctx:(%d, destaddr: %d, )", ctx->origsock, ctx->destaddr.sin_port, ctx->destaddr.sin_addr.s_addr);
     return 0;
-};
+}
 int SLListenIPv4Socket(ListeningContext *ctx) {
     _sl_log_trace("Entering function with values: ctx:(%d, %d, %d)", ctx->sock, ctx->port, ctx->incoming);
     _sl_log_info("Binding socket with file descriptor: %d to poert: %d", ctx->sock, ctx->port);
