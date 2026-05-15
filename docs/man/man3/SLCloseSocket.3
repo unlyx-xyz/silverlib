@@ -1,0 +1,19 @@
+.TH SLCLOSESOCKET 3 "2026-05-14" "silverlib v1.4.1" "silverlib manual"
+.SH NAME
+SLCloseSocket - Closes a socket
+.SH LIBRARY
+silverlib library
+.SH SYNOPSIS
+.nf
+.B #define SILVER_LIB_IMPLEMENTATION
+.B #include "silverlib.h"
+
+.BI "int SLCloseSocket(int " "fd" ")"
+.fi
+.SH DESCRIPTION
+Wrapper of the \fBclose\fP(3) function with
+logging and errno printing
+.SH RETURN VALUE
+Same return value as \fBclose\fP(3)\.
+.SH SEE ALSO
+.BR "close" "(3), " "SLInitLib" "(3), " "SLCreateTCPIPv4Socket" "(3), " "SLConnectIPv4Socket" "(3), " "SLListenIPv4Socket" "(3), " "SLSendIPv4Socket" "(3), "  "SLRecvIPv4Socket" "(3), "

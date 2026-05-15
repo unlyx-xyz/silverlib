@@ -1,0 +1,24 @@
+.TH SLLISTENIPV4SOCKET 3 "2026-05-15" "silverlib v1.4.1" "silverlib manual"
+.SH NAME
+SLListenIPv4Socket - Prepares socket for incoming connections
+.SH LIBRARY
+silverlib library
+.SH SYNOPSIS
+.nf
+.B #define SILVER_LIB_IMPLEMENTATION
+.B #include "silverlib.h"
+
+.BI "int SLListenIPv4Socket(ListeningContext" " *ctx" ")"
+.fi
+.SH DESCRIPTION
+Function wrapper of \fBbind\fP(3), \fBlisten\fP(3) and
+\fBconnect\fP(3) it binds the socket into a specific
+address and port, sets it on listening mode, and waits
+for a connection\.
+.SH RETURN VALUE
+Upon successful completion shall return a non-negative
+number reprecentating the file descriptor of the accepted
+socket\. Otherwise, a value of -1 shall be returned\.
+.SH SEE ALSO
+.BR "bind" "(3), " "listen" "(3), " "connect" "(3), " "SLInitLib" "(3), " "SLCreateTCPIPv4Socket" "(3), " "SLCloseSocket" "(3), " "SLConnectIPv4Socket" "(3), " "SLSendIPv4Socket", "(3), "  "SLRecvIPv4Socket" "(3), ""SLInitLib" "(3), " "SLCreateTCPIPv4Socket" "(3), " "SLCloseSocket" "(3), " "SLConnectIPv4Socket" "(3), " "SLListenIPv4Socket" "(3), " "SLSendIPv4Socket", "(3), "  "SLRecvIPv4Socket" "(3), "
+

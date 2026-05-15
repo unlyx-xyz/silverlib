@@ -1,0 +1,20 @@
+.TH SLCONNECTIPV4SOCKET 3 "2026-05-14" "silverlib v1.4.1" "silverlib manual"
+.SH NAME
+SLConnectIPv4Socket - Connects a socket to a specific destinatary
+.SH LIBRARY
+silverlib library
+.SH SYNOPSIS
+.nf
+.B #define SILVER_LIB_IMPLEMENTATION
+.B #include "silverlib.h"
+
+.BI "int SLConnectIPv4Socket(ConnectionContext" " *ctx" ")"
+.fi
+.SH DESCRIPTION
+Wrapper of \fBconnect\fP(3) function, with logging
+and errno printing
+.SH RETURN  VALUE
+Same return value as \fBconnect\fP(3)
+.SH SEE ALSO
+.BR "connect" "(3), " "SLInitLib" "(3), " "SLCreateTCPIPv4Socket" "(3), " "SLCloseSocket" "(3), " "SLListenIPv4Socket" "(3), " "SLSendIPv4Socket", "(3), "  "SLRecvIPv4Socket" "(3), "
+

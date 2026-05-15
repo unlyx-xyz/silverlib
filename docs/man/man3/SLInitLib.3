@@ -1,0 +1,19 @@
+.TH SLINITLIB 3 "2026-05-14" "silverlib v1.4.1" "silverlib manual"
+.SH NAME
+SLInitLib - Initialize silverlib library
+.SH LIBRARY
+silverlib library
+.SH SYNOPSIS
+.nf
+.B #define SILVER_LIB_IMPLEMENTATION
+.B #include "silverlib.h"
+
+.BI "void SLInitLib(void)"
+.fi
+.SH DESCRIPTION
+This function initializes library necessary variables\.
+You MUST use this function before using any other one
+in the library\.
+.SH SEE ALSO
+.BR "SLCreateTCPIPv4Socket" "(3), " "SLCloseSocket" "(3), " "SLConnectIPv4Socket" "(3), " "SLListenIPv4Socket" "(3), " "SLSendIPv4Socket", "(3), "  "SLRecvIPv4Socket" "(3), " 
+

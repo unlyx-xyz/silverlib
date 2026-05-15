@@ -1,0 +1,19 @@
+.TH SLRECVIPV4SOCKET 3 "2026-05-14" "silverlib v1.4.1" "silverlib manual"
+.SH NAME
+SLRecvIPv4Socket - Recieves data from a socket
+.SH LIBRARY
+silverlib library
+.SH SYNOPSIS
+.nf
+.B #define SILVER_LIB_IMPLEMENTATION
+.B #include "silverlib.h"
+
+.BI "int SLRecvIPv4Socket(int " "sock" ", void* " "buff" ", size_t " "size" ", int " "flags" ")"
+.fi
+.SH DESCRIPTION
+Wrapper of the \fBrecv\fP(3) function with logging
+and errno printing\.
+.SH RETURN VALUE
+Same return value as \fBrecv\fP(3)\.
+.SH SEE ALSO
+.BR "recv" "(3), " "SLInitLib" "(3), " "SLCreateTCPIPv4Socket" "(3), " "SLCloseSocket" "(3), " "SLConnectIPv4Socket" "(3), " "SLListenIPv4Socket" "(3), " "SLSendIPv4Socket", "(3), "

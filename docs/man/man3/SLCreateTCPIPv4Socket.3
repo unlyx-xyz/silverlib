@@ -1,0 +1,21 @@
+.TH SLCREATETCPIPV4SOCKET 3 "2026-05-14" "silverlib v1.4.1" "silverlib manual"
+.SH NAME
+SLCreateTCPIPv4Socket, SLCreateUDPIPv4Socket - Creates a socket
+.SH LIBRARY
+silverlib library
+.SH SYNOPSIS
+.nf
+.B #define SILVER_LIB_IMPLEMENTATION
+.B #include "silverlib.h"
+
+.BI "int SLCreateUDPIPv4Socket(SocketContext" " *ctx" ")"
+.BI "int SLCreateTCPIPv4Socket(SocketContext" " *ctx" ")"
+.fi
+.SH DESCRIPTION
+Both functions are a wrapper of the function \fBsocket\fP(3)
+with logging, socket options handling and errno printing\.
+.SH RETURN VALUE
+same return value as \fBsocket\fP(3)\.
+.SH SEE ALSO
+.BR "socket" "(3), " "SLInitLib" "(3), " "SLCloseSocket" "(3), " "SLConnectIPv4Socket" "(3), " "SLListenIPv4Socket" "(3), " "SLSendIPv4Socket", "(3), "  "SLRecvIPv4Socket" "(3), " 
+
