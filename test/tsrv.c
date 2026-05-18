@@ -7,8 +7,6 @@
 
 int main() {
 
-    SLInitLib();
-
     SocketContext srvsockctx = {
         .reuseport = 1,
         .reuseaddr = 1,

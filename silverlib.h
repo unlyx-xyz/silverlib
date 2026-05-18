@@ -20,16 +20,11 @@ Version: 1.4.1
 #include <string.h>
 #include <time.h>
 
-#define TINT_LIB_IMPLEMENTATION
-#include "deps/tintlib/tintlib.h"
-
 /*
 ======================
 ==###DECLARATIONS###==
 ======================
 */
-
-void SLInitLib(void);
 
 // LOGGING ------------------------------
 
@@ -42,8 +37,6 @@ typedef enum {
     LOGL_FATAL = 5,
     LOGL_DISABLED = 6,
 } LOG_LEVEL;
-
-extern TL_Sequence _log_color[];
 
 // NETWORKING -> SOCKETS ----------------
 
@@ -94,38 +87,6 @@ int SLRecvIPv4Socket(int sock, void* buff, size_t size, int flags);
 
 #ifdef SILVER_LIB_IMPLEMENTATION
 
-TL_Sequence _log_color[] = {
-    (TL_Sequence){0},
-    (TL_Sequence){0},
-    (TL_Sequence){0},
-    (TL_Sequence){0},
-    (TL_Sequence){0},
-};
-
-static bool _lib_initialized = false;
-void SLInitLib(void) {
-
-    TL_Sequence graphics_settings = {0};
-    graphics_settings.da.bold = true;
-    graphics_settings.da.underline = true;
-
-    uint8_t log_color_elements = sizeof(_log_color) / sizeof(TL_Sequence);
-    for (uint8_t i = 0; i < log_color_elements; i++) {
-        TL_CopySequenceDa(graphics_settings, &_log_color[i]);
-        _log_color[i].c8bit.background = -1;
-    }
-
-    _log_color[LOGL_TRACE].c8bit.foreground = 255;
-    _log_color[LOGL_DEBUG].c8bit.foreground = 226;
-    _log_color[LOGL_INFO].c8bit.foreground = 45;
-    _log_color[LOGL_WARN].c8bit.foreground = 208;
-    _log_color[LOGL_ERROR].c8bit.foreground = 196;
-    _log_color[LOGL_FATAL].c8bit.foreground = 232;
-
-    _lib_initialized = true;
-
-}
-
 #ifndef SILVER_LIB_LOGL
 #define SILVER_LIB_LOGL LOGL_DISABLED
 #endif
@@ -140,8 +101,7 @@ static inline void _sl_log(LOG_LEVEL logl, const char* file,
     clock_gettime(CLOCK_REALTIME, &ts);
     time_t t = time(NULL);
     struct tm *tm_info = localtime(&t);
-    fprintf(stderr, "| %d:%d:%d.%03ld | ", tm_info->tm_hour, tm_info->tm_min, tm_info->tm_sec, ts.tv_nsec / 1000000);
-    TL_fprintfc8bit(stderr, _log_color[logl], "[%s] %s:%d:%s:", logl_presentations[logl], file, line, fnc);
+    fprintf(stderr, "| %d:%d:%d.%03ld | [%s] %s:%d:%s", tm_info->tm_hour, tm_info->tm_min, tm_info->tm_sec, ts.tv_nsec / 1000000, logl_presentations[logl], file, line, fnc);
     va_list args;
     va_start(args, fmt);
     vfprintf(stderr, fmt, args);
@@ -156,14 +116,6 @@ static inline void _sl_log(LOG_LEVEL logl, const char* file,
 #define _sl_log_error(...) _sl_log(LOGL_ERROR, __FILE__, __LINE__, __func__, ##__VA_ARGS__);
 #define _sl_log_fatal(...) _sl_log(LOGL_FATAL, __FILE__, __LINE__, __func__, ##__VA_ARGS__);
 
-static inline bool _sl_check_library_initialized() {
-    if (!_lib_initialized) {
-        _sl_log_error("Library NOT initialized.");
-        return false;
-    }
-    return true;
-}
-
 #define opthandler(enabled, fd, lvl, opt, val, size)\
         do {\
             _sl_log_trace("Entering opthandler macro with values: %d, %d, %d, %d, %d, %d", enabled, fd, lvl, opt, val, size);\
@@ -177,7 +129,6 @@ static inline bool _sl_check_library_initialized() {
         } while (0)\
 
 int SLCreateUDPIPv4Socket(SocketContext *ctx) {
-    if (!_sl_check_library_initialized()) return -1;
     _sl_log_trace("Entering function with values: ctx:(%d, %d, keepalive: %d, %d, %d, %d)", ctx->reuseaddr, ctx->reuseport, ctx->keepalive.enable, ctx->keepalive.idle, ctx->keepalive.interval, ctx->keepalive.probes);
     int sock;
     if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
@@ -191,7 +142,6 @@ int SLCreateUDPIPv4Socket(SocketContext *ctx) {
     return sock;
 }
 int SLCreateTCPIPv4Socket(SocketContext *ctx) {
-    if (!_sl_check_library_initialized()) return -1;
     _sl_log_trace("Entering function with values: ctx:(%d, %d, keepalive: %d, %d, %d, %d)", ctx->reuseaddr, ctx->reuseport, ctx->keepalive.enable, ctx->keepalive.idle, ctx->keepalive.interval, ctx->keepalive.probes);
     int sock;
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -209,7 +159,6 @@ int SLCreateTCPIPv4Socket(SocketContext *ctx) {
     return sock;
 }
 int SLCloseSocket(int fd) {
-    if (!_sl_check_library_initialized()) return -1;
     _sl_log_trace("Entering function with values: fd:%d", fd);
     if (close(fd) < 0) {
         _sl_log_error("Failed closing file descriptor: %d | %s", fd, strerror(errno));
@@ -220,7 +169,6 @@ int SLCloseSocket(int fd) {
     return 0;
 }
 int SLConnectIPv4Socket(ConnectionContext *ctx) {
-    if (!_sl_check_library_initialized()) return -1; 
     _sl_log_trace("Entering function with values: ctx:(%d, destaddr: %d, %d)", ctx->origsock, ctx->destaddr.sin_port, ctx->destaddr.sin_addr.s_addr);
     char presentation_dest_ip[INET_ADDRSTRLEN] = {0};
     uint16_t presentation_dest_port = ntohs(ctx->destaddr.sin_port);
@@ -236,7 +184,6 @@ int SLConnectIPv4Socket(ConnectionContext *ctx) {
     return 0;
 }
 int SLListenIPv4Socket(ListeningContext *ctx) {
-    if (!_sl_check_library_initialized()) return -1;
     _sl_log_trace("Entering function with values: ctx:(%d, %d, %d)", ctx->sock, ctx->port, ctx->incoming);
     _sl_log_info("Binding socket with file descriptor: %d to poert: %d", ctx->sock, ctx->port);
     struct sockaddr_in srvaddr;
@@ -265,7 +212,6 @@ int SLListenIPv4Socket(ListeningContext *ctx) {
     return cnnclisock;
 }
 int SLSendIPv4Socket(int sock, void* data, size_t size, int flags) {
-    if (!_sl_check_library_initialized()) return -1;
     _sl_log_trace("Entering function with values: %d, %p, %l", sock, data, size);
     _sl_log_info("Sending bytes from socket: %d", sock);
     ssize_t bytes_sent = send(sock, data, size, flags);
@@ -278,7 +224,6 @@ int SLSendIPv4Socket(int sock, void* data, size_t size, int flags) {
     return bytes_sent;
 }
 int SLRecvIPv4Socket(int sock, void* buff, size_t size, int flags) {
-    if (!_sl_check_library_initialized()) return -1;
     _sl_log_trace("Entering function with values: %d, %p, %l", sock, buff, size);
     _sl_log_info("Waiting to recv info from socket: %d...", sock);
     ssize_t bytes_recv = recv(sock, buff, size, flags);

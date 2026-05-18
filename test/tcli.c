@@ -7,8 +7,6 @@
 
 int main() {
 
-    SLInitLib();
-
     SocketContext clisockctx = {
         .reuseport = 1,
         .reuseaddr = 1,
