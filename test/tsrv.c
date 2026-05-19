@@ -26,16 +26,20 @@ int main() {
         .incoming = 1,
     };
     
-    int cnnsock = SLListenIPv4Socket(&srvlisctx);
-    assert(cnnsock > 0);
+    int status = SLListenIPv4Socket(&srvlisctx);
+    assert(status > 0);
+
+    ConnectionAcceptionContext srvcnnaccptctx = {0};
+    srvcnnaccptctx.localpeer_sock = srvsock;
+    SLAcceptConnectionIPv4Socket(&srvcnnaccptctx);
 
     char msg[100] = {0};
-    assert(SLRecvIPv4Socket(cnnsock, msg, sizeof(msg), 0) > 0);
+    assert(SLRecvIPv4Socket(srvcnnaccptctx.remotepeer_sock, msg, sizeof(msg), 0) > 0);
 
     printf("%s\n", msg);
 
     assert(SLCloseSocket(srvsock) != -1);
-    assert(SLCloseSocket(cnnsock) != -1);
+    assert(SLCloseSocket(srvcnnaccptctx.remotepeer_sock) != -1);
 
 }
 

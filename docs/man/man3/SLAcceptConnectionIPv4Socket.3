@@ -1,0 +1,23 @@
+.TH SLACCEPTCONNECTIONIPV4SOCKET 3 "2026-05-19" "silverlib v1.4.1" "silverlib manual"
+.SH NAME
+SLAcceptConnectionIPv4Socket - Accepts incoming connections
+.SH LIBRARY
+silverlib library
+.SH SYNOPSIS
+.nf
+.B #define SILVER_LIB_IMPLEMENTATION
+.B #include "silverlib.h"
+
+.BI "int SLAcceptConnectionIPv4Socket(ConnectionAcceptionContext" " *ctx" ")"
+.fi
+.SH DESCRIPTION
+Function wrapper of \fBaccept\fP(3) when any connection
+is accepted, it stores the remote peer socket and address
+into the \fBConnectionAcceptionContext\fP struct provided
+as argument\.
+.SH RETURN VALUE
+Upon successful completion shall return a value of 0\.
+Otherwise shall return a value of -1\.
+.SH SEE ALSO
+.BR  "accept" "(3), " "SLInitLib" "(3), " "SLCreateTCPIPv4Socket" "(3), " "SLCloseSocket" "(3), " "SLConnectIPv4Socket" "(3), " "SLSendIPv4Socket", "(3), "  "SLRecvIPv4Socket" "(3), ""SLInitLib" "(3), " "SLCreateTCPIPv4Socket" "(3), " "SLCloseSocket" "(3), " "SLConnectIPv4Socket" "(3), " "SLListenIPv4Socket" "(3), " "SLSendIPv4Socket", "(3), "  "SLRecvIPv4Socket" "(3), "
+
