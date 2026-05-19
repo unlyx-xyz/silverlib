@@ -27,10 +27,11 @@ int main() {
     };
     
     int status = SLListenIPv4Socket(&srvlisctx);
-    assert(status > 0);
+    assert(status != -1);
 
     ConnectionAcceptionContext srvcnnaccptctx = {0};
     srvcnnaccptctx.localpeer_sock = srvsock;
+    srvcnnaccptctx.remotepeer_addr_len = sizeof(srvcnnaccptctx.remotepeer_addr);
     SLAcceptConnectionIPv4Socket(&srvcnnaccptctx);
 
     char msg[100] = {0};

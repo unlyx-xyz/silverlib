@@ -78,6 +78,7 @@ typedef struct {
     int localpeer_sock;
     int remotepeer_sock;
     struct sockaddr_in remotepeer_addr;
+    socklen_t remotepeer_addr_len;
 } ConnectionAcceptionContext;
 
 int SLAcceptConnectionIPv4Socket(ConnectionAcceptionContext* ctx);
@@ -216,7 +217,7 @@ int SLListenIPv4Socket(ListeningContext *ctx) {
 int SLAcceptConnectionIPv4Socket(ConnectionAcceptionContext* ctx) {
     _sl_log_trace("Entering function with values: ctx:(%d, %d, %p)", ctx->localpeer_sock, ctx->remotepeer_sock, ctx->remotepeer_addr); 
     _sl_log_info("Waiting for clients..");
-    int remotepeer_sock = accept(ctx->localpeer_sock, (struct sockaddr *)&ctx->remotepeer_addr, 0);
+    int remotepeer_sock = accept(ctx->localpeer_sock, (struct sockaddr *)&ctx->remotepeer_addr, &ctx->remotepeer_addr_len);
     if (remotepeer_sock < 0) {
         _sl_log_error("Failed accepting connection with client | %s", strerror(errno));
         return -1;
