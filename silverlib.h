@@ -110,7 +110,7 @@ static inline void _sl_log(LOG_LEVEL logl, const char* file,
     clock_gettime(CLOCK_REALTIME, &ts);
     time_t t = time(NULL);
     struct tm *tm_info = localtime(&t);
-    fprintf(stderr, "| %d:%d:%d.%03ld | [%s] %s:%d:%s", tm_info->tm_hour, tm_info->tm_min, tm_info->tm_sec, ts.tv_nsec / 1000000, logl_presentations[logl], file, line, fnc);
+    fprintf(stderr, "| %d:%d:%d.%03ld | [%s] %s:%d:%s: ", tm_info->tm_hour, tm_info->tm_min, tm_info->tm_sec, ts.tv_nsec / 1000000, logl_presentations[logl], strrchr(file, '/'), line, fnc);
     va_list args;
     va_start(args, fmt);
     vfprintf(stderr, fmt, args);
@@ -194,7 +194,7 @@ int SLConnectIPv4Socket(ConnectionContext *ctx) {
 }
 int SLListenIPv4Socket(ListeningContext *ctx) {
     _sl_log_trace("Entering function with values: ctx:(%d, %d, %d)", ctx->sock, ctx->port, ctx->incoming);
-    _sl_log_info("Binding socket with file descriptor: %d to poert: %d", ctx->sock, ctx->port);
+    _sl_log_info("Binding socket with file descriptor: %d to port: %d", ctx->sock, ctx->port);
     struct sockaddr_in srvaddr;
     srvaddr.sin_family = AF_INET;
     srvaddr.sin_addr.s_addr = INADDR_ANY;
